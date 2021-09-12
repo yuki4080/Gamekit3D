@@ -7,6 +7,8 @@ namespace Gamekit3D
     [RequireComponent(typeof(Collider))]
     public class TransitionPoint : MonoBehaviour
     {
+        private Controls inputs;
+
         public enum TransitionType
         {
             DifferentZone, DifferentNonGameplayScene, SameScene,
@@ -39,6 +41,18 @@ namespace Gamekit3D
         public Gamekit3D.InventoryController.InventoryChecker inventoryCheck;
 
         bool m_TransitioningGameObjectPresent;
+
+        void Awake()
+        {
+            inputs = new Controls();
+            inputs.Player.Jump.performed += ctx =>
+            {
+                if (ctx.ReadValue<bool>())
+                {
+                    Transition();
+                }
+            };
+        }
 
         void Start()
         {
@@ -92,13 +106,9 @@ namespace Gamekit3D
                 if (transitionWhen == TransitionWhen.ExternalCall)
                     TransitionInternal();
         }
-        
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Joystick1Button0))
-            {
-                Transition();
-            }
-        }
+
+        private void OnDisable() => inputs.Disable();
+        private void OnDestroy() => inputs.Disable();
+        private void OnEnable() => inputs.Enable();
     }
 }

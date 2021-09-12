@@ -11,6 +11,7 @@ namespace Gamekit3D
 {
     public class StartUI : MonoBehaviour
     {
+        private Controls inputs;
         public bool alwaysDisplayMouse;
         public GameObject pauseCanvas;
         public GameObject optionsCanvas;
@@ -19,6 +20,12 @@ namespace Gamekit3D
 
         protected bool m_InPause;
         protected PlayableDirector[] m_Directors;
+
+        void Awake()
+        {
+            inputs = new Controls();
+            inputs.Player.Pause.started += ctx => SwitchPauseState();
+        }
 
         void Start()
         {
@@ -56,14 +63,6 @@ namespace Gamekit3D
             m_InPause = true;
             SwitchPauseState();
             SceneController.RestartZone();
-        }
-
-        void Update()
-        {
-            if (PlayerInput.Instance != null && PlayerInput.Instance.Pause)
-            {
-                SwitchPauseState();
-            }
         }
 
         protected void SwitchPauseState()
@@ -113,5 +112,9 @@ namespace Gamekit3D
 
             m_InPause = !m_InPause;
         }
+
+        private void OnDisable() => inputs.Disable();
+        private void OnDestroy() => inputs.Disable();
+        private void OnEnable() => inputs.Enable();
     }
 }

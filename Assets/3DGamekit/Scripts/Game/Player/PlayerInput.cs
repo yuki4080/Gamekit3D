@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 using System;
 using System.Collections;
 using Gamekit3D;
@@ -6,6 +7,8 @@ using Gamekit3D;
 
 public class PlayerInput : MonoBehaviour
 {
+    private Controls inputs;
+
     public static PlayerInput Instance
     {
         get { return s_Instance; }
@@ -20,7 +23,6 @@ public class PlayerInput : MonoBehaviour
     protected Vector2 m_Camera;
     protected bool m_Jump;
     protected bool m_Attack;
-    protected bool m_Pause;
     protected bool m_ExternalInputBlocked;
 
     public Vector2 MoveInput
@@ -53,11 +55,6 @@ public class PlayerInput : MonoBehaviour
         get { return m_Attack && !playerControllerInputBlocked && !m_ExternalInputBlocked; }
     }
 
-    public bool Pause
-    {
-        get { return m_Pause; }
-    }
-
     WaitForSeconds m_AttackInputWait;
     Coroutine m_AttackWaitCoroutine;
 
@@ -65,30 +62,27 @@ public class PlayerInput : MonoBehaviour
 
     void Awake()
     {
+        inputs = new Controls();
+        inputs.Player.Movement.performed += ctx => m_Movement.Set(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y);
+        inputs.Player.Movement.canceled += ctx => m_Movement.Set(0, 0);
+        inputs.Player.Camera.performed += ctx => m_Camera.Set(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y);
+        inputs.Player.Camera.canceled += ctx => m_Camera.Set(0, 0);
+        inputs.Player.Jump.performed += ctx => m_Jump = true;
+        inputs.Player.Jump.canceled += ctx => m_Jump = false;
+        inputs.Player.Attack.started += ctx =>
+        {
+            if (m_AttackWaitCoroutine != null)
+                StopCoroutine(m_AttackWaitCoroutine);
+
+            m_AttackWaitCoroutine = StartCoroutine(AttackWait());
+        };
+
         m_AttackInputWait = new WaitForSeconds(k_AttackInputDuration);
 
         if (s_Instance == null)
             s_Instance = this;
         else if (s_Instance != this)
             throw new UnityException("There cannot be more than one PlayerInput script.  The instances are " + s_Instance.name + " and " + name + ".");
-    }
-
-
-    void Update()
-    {
-        m_Movement.Set(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        m_Camera.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        m_Jump = Input.GetButton("Jump");
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            if (m_AttackWaitCoroutine != null)
-                StopCoroutine(m_AttackWaitCoroutine);
-
-            m_AttackWaitCoroutine = StartCoroutine(AttackWait());
-        }
-
-        m_Pause = Input.GetButtonDown ("Pause");
     }
 
     IEnumerator AttackWait()
@@ -114,4 +108,8 @@ public class PlayerInput : MonoBehaviour
     {
         m_ExternalInputBlocked = false;
     }
+
+    private void OnDisable() => inputs.Disable();
+    private void OnDestroy() => inputs.Disable();
+    private void OnEnable() => inputs.Enable();
 }
