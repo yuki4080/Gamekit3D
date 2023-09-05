@@ -45,13 +45,7 @@ namespace Gamekit3D
         void Awake()
         {
             inputs = new Controls();
-            inputs.Player.Jump.performed += ctx =>
-            {
-                if (ctx.ReadValue<bool>())
-                {
-                    Transition();
-                }
-            };
+            inputs.Player.Jump.started += ctx => Transition();
         }
 
         void Start()
