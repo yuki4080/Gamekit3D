@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 namespace Gamekit3D
 {
@@ -9,6 +11,7 @@ namespace Gamekit3D
     {
         public Animator animator;
         public TextMeshProUGUI textMeshProUGUI;
+        public LocalizedStringTable stringTable;
 
         protected Coroutine m_DeactivationCoroutine;
     
@@ -43,7 +46,7 @@ namespace Gamekit3D
 
             gameObject.SetActive(true);
             animator.SetBool(m_HashActivePara, true);
-            textMeshProUGUI.text = Translator.Instance[phraseKey];
+            textMeshProUGUI.text = LocalizationSettings.StringDatabase.GetLocalizedString(stringTable.TableReference, phraseKey);
         }
 
         public void DeactivateCanvasWithDelay (float delay)

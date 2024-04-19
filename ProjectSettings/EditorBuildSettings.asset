@@ -20,4 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/3DGamekit/Scenes/UI/Loading.unity
     guid: ebc4647ff02971c4ba1b207af066be4d
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 770b7e7376664db4988ecf299295efb3,
+      type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: 1dcad82e70a578749abe792282b46d9d,
+      type: 2}
