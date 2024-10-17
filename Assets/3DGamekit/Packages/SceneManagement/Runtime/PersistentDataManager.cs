@@ -12,7 +12,7 @@ namespace Gamekit3D
             {
                 if (instance != null)
                     return instance;
-                instance = FindObjectOfType<PersistentDataManager>();
+                instance = FindAnyObjectByType<PersistentDataManager>();
                 if (instance != null)
                     return instance;
 
