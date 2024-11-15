@@ -44,12 +44,6 @@ namespace Gamekit3D
             m_KeyboardAndMouseCameraProp = serializedObject.FindProperty("keyboardAndMouseCamera");
             m_ControllerCameraProp = serializedObject.FindProperty("controllerCamera");
             m_InputChoiceProp = serializedObject.FindProperty("inputChoice");
-            m_KeyboardAndMouseInvertSettingsProp = serializedObject.FindProperty("keyboardAndMouseInvertSettings");
-            m_KeyboardAndMouseInvertSettingsInvertXProp = m_KeyboardAndMouseInvertSettingsProp.FindPropertyRelative("invertX");
-            m_KeyboardAndMouseInvertSettingsInvertYProp = m_KeyboardAndMouseInvertSettingsProp.FindPropertyRelative("invertY");
-            m_ControllerInvertSettingsProp = serializedObject.FindProperty("controllerInvertSettings");
-            m_ControllerInvertSettingsInvertXProp = m_ControllerInvertSettingsProp.FindPropertyRelative("invertX");
-            m_ControllerInvertSettingsInvertYProp = m_ControllerInvertSettingsProp.FindPropertyRelative("invertY");
             m_AllowRuntimeCameraSettingsChangesProp = serializedObject.FindProperty("allowRuntimeCameraSettingsChanges");
         }
 
@@ -66,24 +60,6 @@ namespace Gamekit3D
             EditorGUILayout.PropertyField(m_KeyboardAndMouseCameraProp, m_KeyboardAndMouseCameraContent);
             EditorGUILayout.PropertyField(m_ControllerCameraProp, m_ControllerCameraContent);
             EditorGUILayout.PropertyField(m_InputChoiceProp, m_InputChoiceContent);
-
-            GUI.enabled = m_InputChoiceProp.intValue == 0;
-            EditorGUILayout.LabelField(m_KeyboardAndMouseInvertSettingsContent);
-            EditorGUI.indentLevel++;
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(m_KeyboardAndMouseInvertSettingsInvertXProp, m_KeyboardAndMouseInvertSettingsInvertXContent);
-            EditorGUILayout.PropertyField(m_KeyboardAndMouseInvertSettingsInvertYProp, m_KeyboardAndMouseInvertSettingsInvertYContent);
-            EditorGUILayout.EndHorizontal();
-            EditorGUI.indentLevel--;
-            GUI.enabled = m_InputChoiceProp.intValue == 1;
-            EditorGUILayout.LabelField(m_ControllerInvertSettingsContent);
-            EditorGUI.indentLevel++;
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(m_ControllerInvertSettingsInvertXProp, m_ControllerInvertSettingsInvertXContent);
-            EditorGUILayout.PropertyField(m_ControllerInvertSettingsInvertYProp, m_ControllerInvertSettingsInvertYContent);
-            EditorGUILayout.EndHorizontal();
-            EditorGUI.indentLevel--;
-            GUI.enabled = true;
 
             EditorGUILayout.PropertyField(m_AllowRuntimeCameraSettingsChangesProp, m_AllowRuntimeCameraSettingsChangesContent);
 

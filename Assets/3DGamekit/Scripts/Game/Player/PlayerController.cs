@@ -2,6 +2,7 @@ using UnityEngine;
 using Gamekit3D.Message;
 using System.Collections;
 using UnityEngine.XR.WSA;
+using Unity.Cinemachine;
 
 namespace Gamekit3D
 {
@@ -318,8 +319,9 @@ namespace Gamekit3D
             // Create three variables, move input local to the player, flattened forward direction of the camera and a local target rotation.
             Vector2 moveInput = m_Input.MoveInput;
             Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
-            
-            Vector3 forward = Quaternion.Euler(0f, cameraSettings.Current.m_XAxis.Value, 0f) * Vector3.forward;
+
+            InputAxis axis = cameraSettings.Current.gameObject.GetComponent<CinemachineOrbitalFollow>().HorizontalAxis;
+            Vector3 forward = Quaternion.Euler(0f, axis.Value, 0f) * Vector3.forward;
             forward.y = 0f;
             forward.Normalize();
 
